@@ -1,5 +1,5 @@
 [database]
-db = "J:\sqlite\casher.db"
+db = "J:\\sqlite\\casher.db"
 conn_timeout = 5
 
 table_debts = "debts"
@@ -10,4 +10,3 @@ table_investment_info = "investment_info"
 table_item_info = "item_info"
 table_payment = "payment"
 table_property = "property"
-
