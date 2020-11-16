@@ -1,5 +1,6 @@
 import toml
 import os
+from internal.entity.sqlite_entity import SqliteDb
 
 
 class Config(object):
@@ -17,7 +18,17 @@ class Config(object):
 
         with open(self.__cfg_path, "r") as f:
             self.__cfg = toml.load(f)
-        self.__db_cfg = self.__cfg["database"]
+        d = self.__cfg["database"]
+        self.__db_cfg = SqliteDb(d["db"],
+                                 d["conn_timeout"],
+                                 d["table_debts"],
+                                 d["table_income"],
+                                 d["table_income_payment_flow"],
+                                 d["table_investment_flow"],
+                                 d["table_investment_info"],
+                                 d["table_item_info"],
+                                 d["table_payment"],
+                                 d["table_property"])
 
     def update(self):
         self.__decode()

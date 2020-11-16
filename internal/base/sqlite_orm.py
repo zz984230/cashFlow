@@ -3,8 +3,8 @@ import sqlite3
 
 class SqliteConn(object):
     def __init__(self, cfg):
-        self.__db = cfg["db"]
-        self.__timeout = cfg["conn_timeout"]
+        self.__db = cfg.db
+        self.__timeout = cfg.conn_timeout
         self.__conn = None
 
     def connect(self):
@@ -16,11 +16,15 @@ class SqliteConn(object):
     def close(self):
         self.__conn.close()
 
+    @property
+    def conn(self):
+        return self.__conn
+
 
 class SqliteClient(object):
     def __init__(self, conn):
         self.__conn = conn
-        self.__cursor = self.__conn.cursor()
+        self.__cursor = conn.cursor()
 
     def insert(self, table, fields: list, data: list):
         field_str = ",".join(fields)
@@ -61,3 +65,21 @@ class SqliteClient(object):
         sql = "SELECT %s FROM %s WHERE %s" % (fields, table, c)
         self.__cursor.execute(sql)
         self.__conn.commit()
+
+
+if __name__ == "__main__":
+    from internal.configs import config
+    c = config.Config()
+    c.set_cfg_path("../configs/conf.toml")
+    c.update()
+
+    connection = SqliteConn(c.db_cfg)
+    connection.connect()
+
+    cli = SqliteClient(connection.conn)
+    debts_data = [
+        ["1", "11"],
+        ["2", "22"]
+    ]
+    cli.insert(c.db_cfg.table_debts, ["itemId", "money"], debts_data)
+    connection.close()
