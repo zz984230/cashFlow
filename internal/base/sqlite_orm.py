@@ -49,12 +49,12 @@ class SqliteClient(object):
         self.__cursor.execute(sql)
         self.__conn.commit()
 
-    def select_all(self, table, fields: str):
-        sql = "SELECT %s FROM %s" % (fields, table)
+    def select_all(self, table, fields: list):
+        sql = "SELECT %s FROM %s" % (",".join(fields), table)
         self.__cursor.execute(sql)
         self.__conn.commit()
 
-    def select_by_key(self, table, fields: str, conditions: dict):
+    def select_by_key(self, table, fields: list, conditions: dict):
         c = ""
         for k, v in conditions:
             if c != "":
@@ -62,7 +62,7 @@ class SqliteClient(object):
 
             c = "%s %s=\"%s\"" % (c, k, v)
 
-        sql = "SELECT %s FROM %s WHERE %s" % (fields, table, c)
+        sql = "SELECT %s FROM %s WHERE %s" % (",".join(fields), table, c)
         self.__cursor.execute(sql)
         self.__conn.commit()
 
